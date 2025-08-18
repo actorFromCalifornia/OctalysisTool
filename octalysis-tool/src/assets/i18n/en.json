@@ -1,0 +1,26 @@
+{
+  "app.title": "Octalysis Tool",
+  "app.subtitle": "Assess 8 motivation drives, save and export.",
+
+  "assessment.title": "Assessment",
+  "comments.title": "Driver Notes",
+  "project.placeholder": "Project name",
+
+  "drivers.meaning": "Epic Meaning",
+  "drivers.accomplishment": "Accomplishment",
+  "drivers.creativity": "Empowerment",
+  "drivers.ownership": "Ownership",
+  "drivers.socialInfluence": "Social Influence",
+  "drivers.scarcity": "Scarcity",
+  "drivers.unpredictability": "Unpredictability",
+  "drivers.avoidance": "Loss & Avoidance",
+
+  "chart.title": "Octalysis Chart",
+
+  "settings.toggleTheme": "Toggle theme",
+  "settings.reset": "Reset",
+  "settings.exportPNG": "Export PNG",
+  "settings.exportSVG": "Export SVG",
+  "settings.exportPDF": "Export PDF",
+  "settings.language": "Language"
+}

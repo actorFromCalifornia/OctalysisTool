@@ -1,0 +1,20 @@
+<main class="container">
+  <header class="header">
+    <div class="heading">
+      <h1>{{ 'app.title' | t }}</h1>
+      <p class="sub">{{ 'app.subtitle' | t }}</p>
+    </div>
+    <div class="actions">
+      <app-settings></app-settings>
+    </div>
+  </header>
+  <app-project></app-project>
+
+  <section class="center">
+    <app-radar-chart></app-radar-chart>
+  </section>
+
+  <section class="comments-wrap">
+    <app-comments></app-comments>
+  </section>
+</main>

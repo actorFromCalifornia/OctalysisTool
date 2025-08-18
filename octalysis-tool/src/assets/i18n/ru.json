@@ -1,0 +1,26 @@
+{
+  "app.title": "Octalysis Tool",
+  "app.subtitle": "Анализируйте 8 стимулов мотивации, сохраняйте и экспортируйте.",
+
+  "assessment.title": "Оценка драйверов",
+  "comments.title": "Комментарии к стимулам",
+  "project.placeholder": "Название проекта",
+
+  "drivers.meaning": "Эпический смысл",
+  "drivers.accomplishment": "Достижения",
+  "drivers.creativity": "Креативность",
+  "drivers.ownership": "Владение",
+  "drivers.socialInfluence": "Социальное влияние",
+  "drivers.scarcity": "Дефицит",
+  "drivers.unpredictability": "Непредсказуемость",
+  "drivers.avoidance": "Потери/Избегание",
+
+  "chart.title": "Диаграмма Octalysis",
+
+  "settings.toggleTheme": "Сменить тему",
+  "settings.reset": "Сбросить",
+  "settings.exportPNG": "Экспорт PNG",
+  "settings.exportSVG": "Экспорт SVG",
+  "settings.exportPDF": "Экспорт PDF",
+  "settings.language": "Язык"
+}
