@@ -100,4 +100,12 @@ export class StateService {
   setComment<K extends keyof Comments>(key: K, text: string) {
     this.subject.next({ ...this.value, comments: { ...this.value.comments, [key]: text } });
   }
+
+  computeTotalScore(drives: CoreDrives): number {
+    const vals = Object.values(drives);
+    return vals.reduce((sum, x) => {
+      const t = Math.max(0, Math.min(1, (x - 25) / 75));
+      return sum + (1 + 3 * t);
+    }, 0);
+  }
 }

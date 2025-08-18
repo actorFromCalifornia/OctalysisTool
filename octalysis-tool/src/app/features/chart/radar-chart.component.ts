@@ -18,6 +18,7 @@ import { I18nService } from '../../core/i18n.service';
     .chart { padding: 1rem; user-select: none; -webkit-user-select: none; }
     .radar { width: 100%; background: var(--bg); display: block; user-select: none; -webkit-user-select: none; }
     :host ::ng-deep text.axis-label { font-size: 16px; fill: var(--text-muted); user-select: none; -webkit-user-select: none; }
+    /* ring numeric labels removed */
   `]
 })
 export class RadarChartComponent implements AfterViewInit, OnDestroy {
@@ -99,6 +100,8 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
       .attr('fill', 'none')
       .attr('stroke', '#e5e7eb')
       .attr('stroke-width', 1);
+
+    // ring numeric labels removed
 
     // Axes and labels
     type Axis = { x: number; y: number; lx: number; ly: number; i: number };
