@@ -34,7 +34,10 @@ jobs:
 
       - name: Build
         working-directory: octalysis-tool
-        run: npm run build
+        run: npm run build -- --base-href /OctalysisTool/
+
+      - name: Add SPA fallback (404.html)
+        run: cp octalysis-tool/dist/octalysis-tool/index.html octalysis-tool/dist/octalysis-tool/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -51,4 +54,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
