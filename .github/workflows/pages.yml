@@ -36,13 +36,29 @@ jobs:
         working-directory: octalysis-tool
         run: npm run build -- --base-href /OctalysisTool/
 
+      - name: Resolve dist path
+        id: resolve_dist
+        run: |
+          set -e
+          if [ -f "octalysis-tool/dist/octalysis-tool/index.html" ]; then
+            echo "dir=octalysis-tool/dist/octalysis-tool" >> $GITHUB_OUTPUT
+          elif [ -f "octalysis-tool/dist/octalysis-tool/browser/index.html" ]; then
+            echo "dir=octalysis-tool/dist/octalysis-tool/browser" >> $GITHUB_OUTPUT
+          else
+            echo "index.html not found in expected dist locations" >&2
+            echo "Dist tree:" >&2
+            ls -la octalysis-tool/dist || true
+            ls -la octalysis-tool/dist/octalysis-tool || true
+            exit 1
+          fi
+
       - name: Add SPA fallback (404.html)
-        run: cp octalysis-tool/dist/octalysis-tool/index.html octalysis-tool/dist/octalysis-tool/404.html
+        run: cp "${{ steps.resolve_dist.outputs.dir }}/index.html" "${{ steps.resolve_dist.outputs.dir }}/404.html"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: octalysis-tool/dist/octalysis-tool
+          path: ${{ steps.resolve_dist.outputs.dir }}
 
   deploy:
     needs: build
