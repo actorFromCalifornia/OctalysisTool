@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { StorageService } from './storage.service';
 
 export type Locale = 'ru' | 'en';
 type Dict = Record<string, string>;
@@ -43,16 +44,23 @@ export class I18nService {
   readonly locale$ = this.localeSubject.asObservable();
   private dict: Dict = {};
 
-  constructor(private http: HttpClient) {
+  private readonly STORAGE_KEY = 'octalysisLocale';
+
+  constructor(private http: HttpClient, private storage: StorageService) {
     // Provide immediate defaults, then choose initial locale by URL prefix
     this.dict = DEFAULT_EN;
     let initial: Locale = 'en';
     try {
+      const saved = this.storage.get<Locale | null>(this.STORAGE_KEY, null as any);
+      if (saved === 'en' || saved === 'ru') {
+        initial = saved;
+      } else {
       const url = new URL(window.location.href);
       const p = url.pathname || '/';
       const pp = url.searchParams.get('p') || '';
       const target = pp || p;
       if (target === '/ru' || target.startsWith('/ru/')) initial = 'ru';
+      }
     } catch {}
     this.setLocale(initial);
   }
@@ -66,6 +74,7 @@ export class I18nService {
     }
     this.localeSubject.next(locale);
     document.documentElement.setAttribute('lang', locale);
+    try { this.storage.set(this.STORAGE_KEY, locale); } catch {}
   }
 
   t(key: string): string {
