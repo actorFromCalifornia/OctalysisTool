@@ -18,10 +18,22 @@
   <meta name="twitter:description" content="Analyze the 8 Core Drives of the Octalysis Framework. Build a radar chart, add notes, and export to PDF. Works fully offline.">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <script>
+    // Normalize GitHub Pages SPA fallback: /?p=/path -> /path (no reload)
+    (function() {
+      try {
+        var u = new URL(window.location.href);
+        var p = u.searchParams.get('p');
+        if (!p) return;
+        var q = u.searchParams.get('q');
+        var target = decodeURIComponent(p) + (q ? ('?' + decodeURIComponent(q)) : '') + (u.hash || '');
+        window.history.replaceState(null, '', target);
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+  <script>
     (function() {
       try {
         var search = new URLSearchParams(window.location.search);
-        if (search.has('p')) return; // respect GitHub Pages fallback parameter
         var path = window.location.pathname || '/';
         if (path !== '/') return; // only auto-redirect from root
         var pref = localStorage.getItem('octalysisLocale');
