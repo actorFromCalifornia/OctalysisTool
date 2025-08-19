@@ -15,7 +15,12 @@ import { I18nService } from '../../core/i18n.service';
     </section>
   `,
   styles: [`
-    .chart { padding: 1rem; user-select: none; -webkit-user-select: none; }
+    :host { display:block; width: 100%; min-width: 0; flex: 1 1 auto; }
+    /*
+      Safari quirk: SVG внутри flex-контейнера может получать минимальную ширину
+      по содержимому и сжиматься. Явно задаём ширину и гибкость контейнеру.
+    */
+    .chart { padding: 1rem; width: 100%; min-width: 0; flex: 1 1 100%; user-select: none; -webkit-user-select: none; }
     .radar { width: 100%; background: var(--bg); display: block; user-select: none; -webkit-user-select: none; }
     :host ::ng-deep text.axis-label { font-size: 16px; fill: var(--text-muted); user-select: none; -webkit-user-select: none; }
     /* ring numeric labels removed */
@@ -180,7 +185,7 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
           const x = p[0], y = p[1];
           const proj = (x*Math.cos(a) + y*Math.sin(a));
           const clamped = Math.max(minR, Math.min(usableR, proj));
-          const value = Math.round((clamped / usableR) * 100);
+          const value = usableR > 0 ? Math.round((clamped / usableR) * 100) : 0;
           const key = this.axisKeys[i] as keyof CoreDrives;
           this.state.updateDrive(key, value);
         })
@@ -208,7 +213,7 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
         const x = p[0], y = p[1];
         const proj = (x*Math.cos(a) + y*Math.sin(a));
         const clamped = Math.max(minR, Math.min(usableR, proj));
-        const value = Math.round((clamped / usableR) * 100);
+        const value = usableR > 0 ? Math.round((clamped / usableR) * 100) : 0;
         const key = this.axisKeys[i] as keyof CoreDrives;
         this.state.updateDrive(key, value);
       });
@@ -282,7 +287,7 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
         const a = ctx.angle(i);
         const proj = (x*Math.cos(a) + y*Math.sin(a));
         const clamped = Math.max(ctx.minR, Math.min(ctx.usableR, proj));
-        const value = Math.round((clamped / ctx.usableR) * 100);
+        const value = ctx.usableR > 0 ? Math.round((clamped / ctx.usableR) * 100) : 0;
         const key = this.axisKeys[i] as keyof CoreDrives;
         this.state.updateDrive(key, value);
       })

@@ -71,9 +71,10 @@ export class StateService {
     let state: AppState;
     if ('meaning' in (saved as any)) {
       const d = saved as CoreDrives;
-      state = { projectName: '', drives: d, comments: { ...DEFAULT_COMMENTS } };
+      state = { projectName: '', drives: this.sanitizeDrives(d), comments: { ...DEFAULT_COMMENTS } };
     } else {
-      state = saved as AppState;
+      const s = saved as AppState;
+      state = { ...s, drives: this.sanitizeDrives(s.drives) };
     }
     this.subject.next(state);
     this.value$.subscribe((v) => this.storage.set(STORAGE_KEY, v));
@@ -84,7 +85,8 @@ export class StateService {
   }
 
   updateDrive<K extends keyof CoreDrives>(key: K, value: number) {
-    const v = Math.max(0, Math.min(100, Number(value)));
+    const n = Number(value);
+    const v = Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
     const next: AppState = { ...this.value, drives: { ...this.value.drives, [key]: v } } as AppState;
     this.subject.next(next);
   }
@@ -107,5 +109,22 @@ export class StateService {
       const t = Math.max(0, Math.min(1, (x - 25) / 75));
       return sum + (1 + 3 * t);
     }, 0);
+  }
+
+  private sanitizeDrives(d: CoreDrives): CoreDrives {
+    const norm = (v: any) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
+    };
+    return {
+      meaning: norm(d?.meaning),
+      accomplishment: norm(d?.accomplishment),
+      creativity: norm(d?.creativity),
+      ownership: norm(d?.ownership),
+      socialInfluence: norm(d?.socialInfluence),
+      scarcity: norm(d?.scarcity),
+      unpredictability: norm(d?.unpredictability),
+      avoidance: norm(d?.avoidance),
+    };
   }
 }

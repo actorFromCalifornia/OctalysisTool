@@ -55,11 +55,21 @@ export class I18nService {
       if (saved === 'en' || saved === 'ru') {
         initial = saved;
       } else {
-      const url = new URL(window.location.href);
-      const p = url.pathname || '/';
-      const pp = url.searchParams.get('p') || '';
-      const target = pp || p;
-      if (target === '/ru' || target.startsWith('/ru/')) initial = 'ru';
+        const url = new URL(window.location.href);
+        const p = url.pathname || '/';
+        const pp = url.searchParams.get('p') || '';
+        const target = pp || p;
+        if (target === '/ru' || target.startsWith('/ru/')) {
+          initial = 'ru';
+        } else {
+          // Fallback heuristic: detect Russian by browser languages or time zone
+          const langs = (navigator.languages || [navigator.language || '']).map(x => (x || '').toLowerCase());
+          const isRuLang = langs.some(l => l.startsWith('ru'));
+          const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toString();
+          const ruTZ = ['Europe/Kaliningrad','Europe/Moscow','Europe/Simferopol','Europe/Kirov','Europe/Volgograd','Europe/Astrakhan','Europe/Saratov','Europe/Ulyanovsk','Asia/Yekaterinburg','Asia/Omsk','Asia/Novosibirsk','Asia/Barnaul','Asia/Tomsk','Asia/Novokuznetsk','Asia/Krasnoyarsk','Asia/Irkutsk','Asia/Chita','Asia/Yakutsk','Asia/Khandyga','Asia/Vladivostok','Asia/Ust-Nera','Asia/Magadan','Asia/Sakhalin','Asia/Srednekolymsk','Asia/Kamchatka','Asia/Anadyr'];
+          const isRuTZ = ruTZ.indexOf(tz) >= 0;
+          if (isRuLang || isRuTZ) initial = 'ru';
+        }
       }
     } catch {}
     this.setLocale(initial);

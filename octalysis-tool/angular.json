@@ -36,10 +36,18 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/locale-redirect.js"
+            ]
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/locale-redirect.js",
+                  "with": "src/locale-redirect.prod.js"
+                }
+              ],
               "baseHref": "/",
               "budgets": [
                 {
