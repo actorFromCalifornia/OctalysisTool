@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslatePipe } from './shared/translate.pipe';
 import { ThemeService } from './core/theme.service';
 import { I18nService } from './core/i18n.service';
+import { SeoService } from './core/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -22,5 +23,7 @@ export class AppComponent {
     private _theme: ThemeService,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private _i18n: I18nService,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    private _seo: SeoService,
   ) {}
 }

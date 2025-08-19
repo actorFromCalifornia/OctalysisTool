@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <meta name="robots" content="noindex">
+    <script>
+      (function() {
+        var l = window.location;
+        var p = l.pathname;
+        var q = l.search && l.search.substring(1);
+        var h = l.hash;
+        var url = '/' + '?p=' + encodeURIComponent(p) + (q ? ('&q=' + encodeURIComponent(q)) : '') + (h || '');
+        l.replace(url);
+      })();
+    </script>
+  </head>
+  <body>Redirecting...</body>
+  </html>
+

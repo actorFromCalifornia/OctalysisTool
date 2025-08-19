@@ -52,7 +52,15 @@ export class SettingsComponent {
   setLocale(l: Locale) { this.i18n.setLocale(l); }
   toggleLocale() {
     const sub = this.i18n.locale$.subscribe((loc) => {
-      this.i18n.setLocale(loc === 'ru' ? 'en' : 'ru');
+      const next = loc === 'ru' ? 'en' : 'ru';
+      this.i18n.setLocale(next);
+      // Отразим язык в URL: en -> '/', ru -> '/ru/'
+      try {
+        const target = next === 'ru' ? '/ru/' : '/';
+        const { protocol, host } = window.location;
+        const href = `${protocol}//${host}${target}`;
+        window.history.replaceState(null, '', href);
+      } catch {}
     });
     sub.unsubscribe();
   }
