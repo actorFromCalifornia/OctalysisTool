@@ -32,9 +32,9 @@ jobs:
         working-directory: octalysis-tool
         run: npm ci
 
-      - name: Build
+      - name: Build (custom domain root)
         working-directory: octalysis-tool
-        run: npm run build -- --base-href /OctalysisTool/
+        run: npm run build -- --base-href /
 
       - name: Resolve dist path
         id: resolve_dist
@@ -52,8 +52,7 @@ jobs:
             exit 1
           fi
 
-      - name: Add SPA fallback (404.html)
-        run: cp "${{ steps.resolve_dist.outputs.dir }}/index.html" "${{ steps.resolve_dist.outputs.dir }}/404.html"
+      # We ship our own 404.html (with GitHub Pages compatible redirect). Do not override it.
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
