@@ -27,6 +27,9 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
+              "src/favicon-32x32.png",
+              "src/apple-touch-icon.png",
               "src/assets",
               "src/robots.txt",
               "src/sitemap.xml",
