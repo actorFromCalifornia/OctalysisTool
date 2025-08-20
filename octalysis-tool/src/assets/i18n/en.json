@@ -15,6 +15,14 @@
   "drivers.scarcity": "Scarcity",
   "drivers.unpredictability": "Unpredictability",
   "drivers.avoidance": "Loss & Avoidance",
+  "drivers.meaning.desc": "Epic Meaning & Calling: users feel part of something bigger than themselves.",
+  "drivers.accomplishment.desc": "Development & Accomplishment: progress, achievements and feedback loops.",
+  "drivers.creativity.desc": "Empowerment of Creativity: experiment, strategize and express creativity.",
+  "drivers.ownership.desc": "Ownership & Possession: collection, customization and investment of effort.",
+  "drivers.socialInfluence.desc": "Social Influence & Relatedness: mentorship, competition, social norms.",
+  "drivers.scarcity.desc": "Scarcity & Impatience: limited access, exclusivity and FOMO.",
+  "drivers.unpredictability.desc": "Unpredictability & Curiosity: randomness, surprises and anticipation.",
+  "drivers.avoidance.desc": "Loss & Avoidance: avoiding negative outcomes and deadlines.",
 
   "chart.title": "Octalysis Chart",
 

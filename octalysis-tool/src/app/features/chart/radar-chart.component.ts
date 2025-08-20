@@ -35,6 +35,7 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
   private lastState?: AppState;
   private draggingIndex: number | null = null;
   private ro?: ResizeObserver;
+  private tooltip?: HTMLDivElement;
   // tooltips/badges removed per request
 
   // config
@@ -61,11 +62,7 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-    this.i18nSub?.unsubscribe();
-    this.ro?.disconnect();
-  }
+  
 
   @HostListener('window:resize')
   onResize() {
@@ -86,6 +83,14 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
 
     svg.attr('viewBox', `0 0 ${width} ${height}`).attr('width', width).attr('height', height);
     svg.selectAll('*').remove();
+
+    // Ensure global tooltip exists and is attached to body (so styles apply globally)
+    if (!this.tooltip) {
+      const t = document.createElement('div');
+      t.className = 'hint-tooltip';
+      document.body.appendChild(t);
+      this.tooltip = t;
+    }
 
     const chart = svg.append('g').attr('transform', `translate(${centerX},${centerY})`);
     const labels = svg.append('g').attr('transform', `translate(${centerX},${centerY})`);
@@ -147,7 +152,21 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
         if (c < -0.3) return -6;
         return 0;
       })
-      .text((d: Axis & { label: string }) => d.label);
+      .text((d: Axis & { label: string }) => d.label)
+      .on('mouseenter', (event: MouseEvent, d: Axis & { label: string }) => {
+        if (!this.tooltip) return;
+        const key = this.axisKeys[d.i] as string;
+        const text = this.i18n.t(`drivers.${key}.desc`);
+        this.tooltip.textContent = text;
+        this.positionTooltip(event);
+        this.tooltip.classList.add('show');
+      })
+      .on('mousemove', (event: MouseEvent) => {
+        this.positionTooltip(event);
+      })
+      .on('mouseleave', () => {
+        this.tooltip?.classList.remove('show');
+      });
 
     // Clamp labels inside the viewport
     this.clampLabelsInside(labels, width, height);
@@ -228,6 +247,37 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
     this.initialized = true;
   }
 
+  private positionTooltip(event: MouseEvent) {
+    if (!this.tooltip) return;
+    const pad = 12;
+    // Use viewport coordinates: position: fixed on body
+    let left = event.clientX + pad;
+    let top = event.clientY + pad;
+    // Prevent overflow right/bottom
+    const tt = this.tooltip;
+    tt.style.left = `-9999px`; // measure offscreen first
+    tt.style.top = `-9999px`;
+    tt.classList.add('show'); // ensure it has dimensions
+    const w = tt.offsetWidth;
+    const h = tt.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    if (left + w + 8 > vw) left = Math.max(8, event.clientX - w - pad);
+    if (top + h + 8 > vh) top = Math.max(8, event.clientY - h - pad);
+    this.tooltip.style.left = `${left}px`;
+    this.tooltip.style.top = `${top}px`;
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
+    this.i18nSub?.unsubscribe();
+    this.ro?.disconnect();
+    if (this.tooltip && this.tooltip.parentElement) {
+      this.tooltip.parentElement.removeChild(this.tooltip);
+      this.tooltip = undefined;
+    }
+  }
+
   private pathForValues(v: CoreDrives, r: d3.ScaleLinear<number, number>, angle: (i: number) => number, minR = 0): string {
     const vals = this.axisKeys.map(k => v[k]);
     const points = vals.map((value, i) => [
@@ -268,8 +318,9 @@ export class RadarChartComponent implements AfterViewInit, OnDestroy {
   private updateLabels() {
     if (!this.initialized) return;
     const svg = d3.select(this.svgRef.nativeElement);
-    const labelsData = this.axisKeys.map(k => this.i18n.t('drivers.' + k));
-    svg.selectAll('text.axis-label').data(labelsData).text((d: string) => d);
+    // Не переназначаем data у меток, чтобы не потерять индексы/handlers
+    svg.selectAll<SVGTextElement, unknown>('text.axis-label')
+      .text((_d: unknown, i: number) => this.i18n.t('drivers.' + this.axisKeys[i]));
     this.clampLabelsInside(d3.select((svg.node() as any).querySelector('g:nth-of-type(2)') as SVGGElement),
       (this.svgRef.nativeElement as any).__radar__.width,
       (this.svgRef.nativeElement as any).__radar__.height);

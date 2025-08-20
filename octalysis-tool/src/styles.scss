@@ -27,3 +27,23 @@ html, body { height: 100%; }
 body { margin: 0; background: var(--bg); color: var(--fg); font-family: Onest, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
 
 .main { max-width: 1200px; margin: 0 auto; }
+
+/* Global hint tooltip used by chart axis labels */
+.hint-tooltip {
+  position: fixed;
+  z-index: 9999;
+  max-width: 320px;
+  padding: .5rem .625rem;
+  border-radius: .5rem;
+  background: var(--panel-bg);
+  color: var(--fg);
+  border: 1px solid var(--btn-border);
+  box-shadow: 0 6px 24px rgba(0,0,0,.12);
+  font-size: .875rem;
+  line-height: 1.25;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .12s ease, transform .12s ease;
+}
+.hint-tooltip.show { opacity: 1; transform: translateY(0); }
